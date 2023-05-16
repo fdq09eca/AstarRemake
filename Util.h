@@ -219,8 +219,8 @@ struct MyDirectionUtil {
 
 
 // Helpers
-struct MyRandomUil {
-	int RandIntInRange(int min_, int max_);
-	int RandInt(int max_ = RAND_MAX);
+struct MyRandomUtil {
+	static int RandIntInRange(int min_, int max_);
+	static int RandInt(int max_ = RAND_MAX);
 
 };

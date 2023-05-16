@@ -26,6 +26,7 @@ void App::init() {
 	solidRedPen = ::CreatePen(PS_SOLID, 5, RGB(255, 0, 0)); // red solid pen
 	solidRedBrush = ::CreateSolidBrush(RGB(255, 0, 0)); // red solid brush
 
+	maze.init(15, 15);
 
 
 }
@@ -37,9 +38,10 @@ void App::setHwnd(HWND hWnd_) {
 
 void App::draw(HDC hdc_)  {
 	backBuffer.clear();
+
 	
-	/*maze.draw(backBuffer.dc());
-	agent.draw(backBuffer.dc())*/;
+	maze.draw(backBuffer.dc());
+	
 	
 	
 	/*for (const auto& p : objList) {

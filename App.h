@@ -1,5 +1,5 @@
 #pragma once
-#include "Util.h"
+#include "Maze.h"
 
 
 
@@ -16,7 +16,7 @@ public:
 	HPEN solidRedPen = NULL;
 	HPEN solidBlackPen = NULL;
 	HBRUSH solidRedBrush = NULL;
-
+	Maze maze;
 	
 	App() = default;
 	

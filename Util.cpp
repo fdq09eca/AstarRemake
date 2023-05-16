@@ -1,6 +1,6 @@
 #include "Util.h"
 
-int MyRandomUil::RandIntInRange(int min_, int max_) {
+int MyRandomUtil::RandIntInRange(int min_, int max_) {
 
 	/*
 	* // exclusive
@@ -17,7 +17,7 @@ int MyRandomUil::RandIntInRange(int min_, int max_) {
 	return num;
 }
 
-int MyRandomUil::RandInt(int max_) { return RandIntInRange(0, max_); }
+int MyRandomUtil::RandInt(int max_) { return RandIntInRange(0, max_); }
 
 
 void BackBuffer::create(HWND hWnd_) {
