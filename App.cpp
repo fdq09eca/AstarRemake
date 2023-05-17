@@ -42,16 +42,6 @@ void App::draw(HDC hdc_)  {
 	
 	maze.draw(backBuffer.dc());
 	
-	
-	
-	/*for (const auto& p : objList) {
-		p->draw(backBuffer.dc());
-	}
-	
-	if (tmpObj) {
-		tmpObj->draw(backBuffer.dc());
-	}*/
-	
 	backBuffer.draw(hdc_);
 }
 

@@ -85,3 +85,19 @@ Vector2D Vector2D::project(const Vector2D& v) const {
 	double projectLen = dotProduct(u);
 	return u * projectLen;
 }
+
+void MyWin32GuiUtil::TextOutAt(HDC hdc, Vector2i pos, int fontSize, const wchar_t* text, COLORREF color) {
+	int oldBkMode = SetBkMode(hdc, TRANSPARENT);
+	COLORREF oldColor = SetTextColor(hdc, color);
+
+	HFONT hFont1 = CreateFont(fontSize, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
+		CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, NULL);
+	HFONT hFontOriginal = (HFONT)SelectObject(hdc, hFont1);
+
+	TextOut(hdc, pos.x, pos.y, text, (int)wcslen(text));
+
+	SelectObject(hdc, hFontOriginal);
+	DeleteObject(hFont1);
+	SetTextColor(hdc, oldColor);
+	SetBkMode(hdc, oldBkMode);
+}

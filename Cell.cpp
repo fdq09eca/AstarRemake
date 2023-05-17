@@ -14,9 +14,12 @@ COLORREF Cell::color() const {
 }
 
 void Cell::drawAt(HDC hdc, POINT pos) const {
+	
 	drawAt(hdc, pos, color());
+	Vector2i txtPos = pos;
+	MyWin32GuiUtil::TextOutAt(hdc, Vector2i(pos) + 3, size/3, L"12", MY_COLOR_RED);
 
-	TextOut(hdc, pos.x + 3, pos.y + 3, L"cost", 4);
+	
 
 }
 

@@ -129,6 +129,7 @@ public:
 
 	Vector2D(double _x = 0, double _y = 0);
 	Vector2D(const Vector2D& v);
+	
 
 	~Vector2D() { x = 0; y = 0; }
 
@@ -142,8 +143,11 @@ public:
 
 	Vector2D project(const Vector2D& v) const;
 
-	inline void operator=(const Vector2D& p) { *this = Vector2D(p); } //recursive here!!
 
+	inline void operator=(const Vector2D& p) { *this = Vector2D(p); } //recursive here!!
+	
+	inline POINT asPOINT() const { return POINT{ (int)x, (int)y }; }
+	inline operator POINT () const { return asPOINT(); }
 
 	inline Vector2D operator+(const Vector2D& v) const { return Vector2D(x + v.x, y + v.y); }
 	inline Vector2D operator-(const Vector2D& v) const { return Vector2D(x - v.x, y - v.y); }
@@ -178,9 +182,26 @@ public:
 	int x = 0;
 	int y = 0;
 
+	inline POINT asPOINT() const { return POINT{ (int)x, (int)y }; }
+	inline operator POINT () const { return asPOINT(); }
+
 	Vector2i(int x_ = 0, int y_ = 0) : x(x_), y(y_) {};
-	inline bool operator!=(const Vector2D& v) const { return v.x != x || v.y != y; }
-	inline bool operator==(const Vector2D& v) const { return !operator!=(v); }
+	Vector2i(const POINT& p) : Vector2i(p.x, p.y) {};
+	
+	inline bool operator!=(const Vector2i& v) const { return v.x != x || v.y != y; }
+	inline bool operator==(const Vector2i& v) const { return !operator!=(v); }
+
+	inline Vector2i operator+(const Vector2i& v) const { return Vector2i(x + v.x, y + v.y); }
+	inline Vector2i operator-(const Vector2i& v) const { return Vector2i(x - v.x, y - v.y); }
+	inline Vector2i operator*(const Vector2i& v) const { return Vector2i(x * v.x, y * v.y); }
+	inline Vector2i operator/(const Vector2i& v) const { return Vector2i(x / v.x, y / v.y); }
+
+	inline Vector2i operator+(int v) const { return Vector2i(x + v, y + v); }
+	inline Vector2i operator-(int v) const { return Vector2i(x - v, y - v); }
+	inline Vector2i operator*(int v) const { return Vector2i(x * v, y * v); }
+	inline Vector2i operator/(int v) const { return Vector2i(x / v, y / v); }
+	
+
 };
 
 
@@ -223,4 +244,8 @@ struct MyRandomUtil {
 	static int RandIntInRange(int min_, int max_);
 	static int RandInt(int max_ = RAND_MAX);
 
+};
+
+struct MyWin32GuiUtil {
+	static void TextOutAt(HDC hdc, Vector2i pos, int fontSize, const wchar_t* text, COLORREF color = MY_COLOR_BLACK);
 };

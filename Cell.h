@@ -11,7 +11,7 @@ private:
 	using Type = CellType;
 	Type _type = Type::Unknown;
 public:
-	static const int size = 20;
+	static const int size = 45;
 	int visitCost = -1;
 
 	Cell(){ reset(); }
