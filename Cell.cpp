@@ -22,11 +22,15 @@ void Cell::drawAt(HDC hdc, POINT pos) const {
 		swprintf(buff, 4, L"%d", visitCost);
 		auto gCostPost = Vector2i(pos) + 3;
 		auto hCostPost = Vector2i(pos) + 3;
+		auto fCostPost = Vector2i(pos) + size/2;
 		hCostPost.x += size/2 + 4;
 		gCostPost.x += 2;
+		fCostPost.x -= 8;
+		fCostPost.y -= 2;
 		
 		MyWin32GuiUtil::TextOutAt(hdc, gCostPost, size/3, buff, MY_COLOR_RED);
 		MyWin32GuiUtil::TextOutAt(hdc, hCostPost, size/3, buff, MY_COLOR_RED);
+		MyWin32GuiUtil::TextOutAt(hdc, fCostPost, size/2, buff, MY_COLOR_RED);
 	}
 
 	
