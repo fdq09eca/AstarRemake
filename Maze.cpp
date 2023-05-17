@@ -5,7 +5,8 @@ void Maze::init(int nRow_, int nCol_) {
 	nRow = nRow_;
 	nCol = nCol_;
 	cells.resize(nCells());
-	genRandom(10);
+
+	genRandom(MyRandomUtil::RandInt(nCells()/2));
 
 }
 
@@ -35,8 +36,6 @@ const Cell& Maze::cell(POINT p) const {
 	return cell(r, c);
 }
 
-
-
 void Maze::genRandom(int nb) {
 	// https://www.youtube.com/watch?v=Y37-gB83HKE&t=514s
 	reset();
@@ -50,7 +49,7 @@ void Maze::genRandom(int nb) {
 			break;
 		}
 		vals.emplace_back(i);
-		cells[i].setBlock(true);
+		cells[i].setAsBlock();
 	}
 }
 

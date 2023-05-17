@@ -19,10 +19,9 @@ public:
 	inline void reset() { setType(Type::Path); visitCost = -1; }
 	
 	void setType(Type t);
-	
-	inline void setBlock(bool b) { if (b) setType(Type::Block); }
-	inline bool isVisited() const { return visitCost >= 0; };
-	inline bool isBlock() const { return _type == Type::Block; };
+	inline void setAsBlock()			{ setType(Type::Block); }
+	inline bool isVisited() const	{ return visitCost >= 0; };
+	inline bool isBlock()	const	{ return _type == Type::Block; };
 	
 
 	COLORREF color() const;

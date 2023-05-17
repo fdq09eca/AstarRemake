@@ -29,8 +29,8 @@ void Cell::drawAt(HDC hdc, POINT pos) const {
 		fCostPost.y -= 2;
 		
 		MyWin32GuiUtil::TextOutAt(hdc, gCostPost, size/3, buff, MY_COLOR_RED);
-		MyWin32GuiUtil::TextOutAt(hdc, hCostPost, size/3, buff, MY_COLOR_RED);
-		MyWin32GuiUtil::TextOutAt(hdc, fCostPost, size/2, buff, MY_COLOR_RED);
+		MyWin32GuiUtil::TextOutAt(hdc, hCostPost, size/3, buff, MY_COLOR_BLACK);
+		MyWin32GuiUtil::TextOutAt(hdc, fCostPost, size/2, buff, MY_COLOR_BLACK);
 	}
 
 	
