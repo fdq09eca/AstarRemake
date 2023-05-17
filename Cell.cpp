@@ -16,8 +16,18 @@ COLORREF Cell::color() const {
 void Cell::drawAt(HDC hdc, POINT pos) const {
 	
 	drawAt(hdc, pos, color());
-	Vector2i txtPos = pos;
-	MyWin32GuiUtil::TextOutAt(hdc, Vector2i(pos) + 3, size/3, L"12", MY_COLOR_RED);
+	
+	if (!isBlock()) {
+		wchar_t buff[4];
+		swprintf(buff, 4, L"%d", visitCost);
+		auto gCostPost = Vector2i(pos) + 3;
+		auto hCostPost = Vector2i(pos) + 3;
+		hCostPost.x += size/2 + 4;
+		gCostPost.x += 2;
+		
+		MyWin32GuiUtil::TextOutAt(hdc, gCostPost, size/3, buff, MY_COLOR_RED);
+		MyWin32GuiUtil::TextOutAt(hdc, hCostPost, size/3, buff, MY_COLOR_RED);
+	}
 
 	
 
