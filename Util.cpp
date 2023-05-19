@@ -57,31 +57,31 @@ void BackBuffer::draw(HDC hdc, int x, int y) {
 	BitBlt(hdc, x, y, _w, _h, _dc, 0, 0, SRCCOPY);
 }
 
-Vector2D::Vector2D(double _x, double _y) : x(_x), y(_y) { }
+Vector2d::Vector2d(double _x, double _y) : x(_x), y(_y) { }
 
-Vector2D::Vector2D(const Vector2D& v) { //copy
+Vector2d::Vector2d(const Vector2d& v) { //copy
 	x = v.x;
 	y = v.y;
 }
 
-double Vector2D::distance(const Vector2D& p) const {
+double Vector2d::distance(const Vector2d& p) const {
 	return (p - *this).length();
 }
 
-double Vector2D::length() const {
+double Vector2d::length() const {
 	return sqrt(x * x + y * y);
 }
 
-Vector2D Vector2D::unitVector() const {
+Vector2d Vector2d::unitVector() const {
 	return *this / length();
 }
 
-double Vector2D::dotProduct(const Vector2D& p) const {
+double Vector2d::dotProduct(const Vector2d& p) const {
 	return x * p.x + y * p.y;
 }
 
-Vector2D Vector2D::project(const Vector2D& v) const {
-	Vector2D u = v.unitVector();
+Vector2d Vector2d::project(const Vector2d& v) const {
+	Vector2d u = v.unitVector();
 	double projectLen = dotProduct(u);
 	return u * projectLen;
 }
@@ -101,3 +101,5 @@ void MyWin32GuiUtil::TextOutAt(HDC hdc, Vector2i pos, int fontSize, const wchar_
 	SetTextColor(hdc, oldColor);
 	SetBkMode(hdc, oldBkMode);
 }
+
+double Distance2d::manhattan(v2d src, v2d dst) { return abs(src.x - dst.x) + abs(src.y - dst.y); }

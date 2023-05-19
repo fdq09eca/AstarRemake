@@ -15,6 +15,8 @@ public:
 	const Cell* cellPtr(int r, int c) const;
 
 	Cell* cellPtr(int r, int c);
+
+	Cell* cellPtr(Vector2i v);
 	
 	const Cell& cell(int r, int c) const;
 	

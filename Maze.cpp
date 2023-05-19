@@ -22,6 +22,16 @@ Cell* Maze::cellPtr(int r, int c) {
 	return nullptr;
 }
 
+Cell* Maze::cellPtr(Vector2i v) {
+	if (v.y >= 0 && v.y < nRow && v.x >= 0 && v.x < nCol)
+		return &cells[v.y * nCol + v.x];
+	return nullptr;	
+}
+
+
+
+
+
 
 
 const Cell& Maze::cell(int r, int c) const {

@@ -121,58 +121,58 @@ public:
 };
 
 
-class Vector2D {
+class Vector2d {
 
 public:
 	double x = 0;
 	double y = 0;
 
-	Vector2D(double _x = 0, double _y = 0);
-	Vector2D(const Vector2D& v);
+	Vector2d(double _x = 0, double _y = 0);
+	Vector2d(const Vector2d& v);
 	
 
-	~Vector2D() { x = 0; y = 0; }
+	~Vector2d() { x = 0; y = 0; }
 
-	double distance(const Vector2D& p) const;
+	double distance(const Vector2d& p) const;
 
 	double length() const;
 
-	Vector2D unitVector() const;
+	Vector2d unitVector() const;
 
-	double dotProduct(const Vector2D& p) const;
+	double dotProduct(const Vector2d& p) const;
 
-	Vector2D project(const Vector2D& v) const;
+	Vector2d project(const Vector2d& v) const;
 
 
-	inline void operator=(const Vector2D& p) { *this = Vector2D(p); } //recursive here!!
+	inline void operator=(const Vector2d& p) { *this = Vector2d(p); } //recursive here!!
 	
 	inline POINT asPOINT() const { return POINT{ (int)x, (int)y }; }
 	inline operator POINT () const { return asPOINT(); }
 
-	inline Vector2D operator+(const Vector2D& v) const { return Vector2D(x + v.x, y + v.y); }
-	inline Vector2D operator-(const Vector2D& v) const { return Vector2D(x - v.x, y - v.y); }
-	inline Vector2D operator*(const Vector2D& v) const { return Vector2D(x * v.x, y * v.y); }
-	inline Vector2D operator/(const Vector2D& v) const { return Vector2D(x / v.x, y / v.y); }
+	inline Vector2d operator+(const Vector2d& v) const { return Vector2d(x + v.x, y + v.y); }
+	inline Vector2d operator-(const Vector2d& v) const { return Vector2d(x - v.x, y - v.y); }
+	inline Vector2d operator*(const Vector2d& v) const { return Vector2d(x * v.x, y * v.y); }
+	inline Vector2d operator/(const Vector2d& v) const { return Vector2d(x / v.x, y / v.y); }
 
-	inline void operator+=(const Vector2D& v) { x += v.x; y += v.y; }
-	inline void operator-=(const Vector2D& v) { x -= v.x; y -= v.y; }
-	inline void operator*=(const Vector2D& v) { x *= v.x; y *= v.y; }
-	inline void operator/=(const Vector2D& v) { x /= v.x; y /= v.y; }
+	inline void operator+=(const Vector2d& v) { x += v.x; y += v.y; }
+	inline void operator-=(const Vector2d& v) { x -= v.x; y -= v.y; }
+	inline void operator*=(const Vector2d& v) { x *= v.x; y *= v.y; }
+	inline void operator/=(const Vector2d& v) { x /= v.x; y /= v.y; }
 
-	inline Vector2D operator*(int val) const { return Vector2D(x * val, y * val); }
-	inline Vector2D operator/(int val) const { return Vector2D(x / val, y / val); }
+	inline Vector2d operator*(int val) const { return Vector2d(x * val, y * val); }
+	inline Vector2d operator/(int val) const { return Vector2d(x / val, y / val); }
 
 	inline void operator*=(int val) { x *= val; y *= val; }
 	inline void operator/=(int val) { x /= val; y /= val; }
 
-	inline Vector2D operator*(float val) const { return Vector2D(x * val, y * val); }
-	inline Vector2D operator/(float val) const { return Vector2D(x / val, y / val); }
+	inline Vector2d operator*(float val) const { return Vector2d(x * val, y * val); }
+	inline Vector2d operator/(float val) const { return Vector2d(x / val, y / val); }
 
-	inline Vector2D operator*(double val) const { return Vector2D(x * val, y * val); }
-	inline Vector2D operator/(double val) const { return Vector2D(x / val, y / val); }
+	inline Vector2d operator*(double val) const { return Vector2d(x * val, y * val); }
+	inline Vector2d operator/(double val) const { return Vector2d(x / val, y / val); }
 
-	inline bool operator!=(const Vector2D& v) const { return v.x != x || v.y != y; }
-	inline bool operator==(const Vector2D& v) const { return !operator!=(v); }
+	inline bool operator!=(const Vector2d& v) const { return v.x != x || v.y != y; }
+	inline bool operator==(const Vector2d& v) const { return !operator!=(v); }
 };
 
 
@@ -184,12 +184,25 @@ public:
 
 	inline POINT asPOINT() const { return POINT{ (int)x, (int)y }; }
 	inline operator POINT () const { return asPOINT(); }
+	
+	inline Vector2d asVector2d() const { return Vector2d{ (double)x, (double)y }; }
+	inline operator Vector2d() const { return asVector2d(); }
 
 	Vector2i(int x_ = 0, int y_ = 0) : x(x_), y(y_) {};
 	Vector2i(const POINT& p) : Vector2i(p.x, p.y) {};
 	
+	
+	
+	
 	inline bool operator!=(const Vector2i& v) const { return v.x != x || v.y != y; }
 	inline bool operator==(const Vector2i& v) const { return !operator!=(v); }
+
+	inline bool operator<(const Vector2i& v) const { return v.x < x && v.y < y; }
+	inline bool operator<=(const Vector2i& v) const { return !operator>(v); }
+	
+	inline bool operator>=(const Vector2i& v) const { return !operator<(v); }
+	inline bool operator>(const Vector2i& v) const { return v.x > x && v.y > y; }
+	
 
 	inline Vector2i operator+(const Vector2i& v) const { return Vector2i(x + v.x, y + v.y); }
 	inline Vector2i operator-(const Vector2i& v) const { return Vector2i(x - v.x, y - v.y); }
@@ -200,6 +213,8 @@ public:
 	inline Vector2i operator-(int v) const { return Vector2i(x - v, y - v); }
 	inline Vector2i operator*(int v) const { return Vector2i(x * v, y * v); }
 	inline Vector2i operator/(int v) const { return Vector2i(x / v, y / v); }
+
+
 	
 
 };
@@ -222,7 +237,9 @@ enum class MyDirection { N, E, S, W };
 
 struct MyDirectionUtil {
 	using MyDir = MyDirection;
-	static constexpr MyDir entries[4]{ MyDir::N, MyDir::E, MyDir::S, MyDir::W };
+	using v2i = Vector2i;
+	
+	static constexpr MyDir	entries[4] { MyDir::N, MyDir::E, MyDir::S, MyDir::W };
 
 
 	MyDir opposite(MyDirection d) {
@@ -236,8 +253,16 @@ struct MyDirectionUtil {
 			assert(false);
 		}
 	}
-};
 
+	static v2i asVector2i(MyDir d) {
+									// { MyDir::N  , MyDir::E , MyDir::S , MyDir::W	    };
+		static const v2i dirVectors[4] { v2i(0, -1), v2i(1, 0), v2i(0, 1), v2i(-1, 0)	};
+		return dirVectors[static_cast<int>(d)];
+	}
+
+	
+	
+};
 
 // Helpers
 struct MyRandomUtil {
@@ -248,4 +273,10 @@ struct MyRandomUtil {
 
 struct MyWin32GuiUtil {
 	static void TextOutAt(HDC hdc, Vector2i pos, int fontSize, const wchar_t* text, COLORREF color = MY_COLOR_BLACK);
+};
+
+
+struct Distance2d {
+	using v2d = Vector2d;
+	static double manhattan(v2d src, v2d dst);
 };
