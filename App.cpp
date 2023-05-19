@@ -27,6 +27,7 @@ void App::init() {
 	solidRedBrush = ::CreateSolidBrush(RGB(255, 0, 0)); // red solid brush
 
 	maze.init(15, 15);
+	agent.init({ 5,  5}, { 10, 10 });
 
 
 }

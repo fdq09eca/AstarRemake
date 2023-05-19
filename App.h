@@ -1,5 +1,6 @@
 #pragma once
 #include "Maze.h"
+#include "Astar.h"
 
 
 
@@ -17,6 +18,7 @@ public:
 	HPEN solidBlackPen = NULL;
 	HBRUSH solidRedBrush = NULL;
 	Maze maze;
+	Astar agent;
 	
 	App() = default;
 	
@@ -30,7 +32,8 @@ public:
 	void initTimer(int fps = 10);
 	
 	void update() { 
-		printf("update\n");
+		agent.update();
+		//printf("update\n");
 		
 	};
 

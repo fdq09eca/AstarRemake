@@ -10,7 +10,7 @@ int MyRandomUtil::RandIntInRange(int min_, int max_) {
 	* v3 = rand() % 30 + 1985;   // v3 in the range 1985-2014
 	*/
 
-	assert(min_ < max_);
+	
 	int range = max_ - min_;
 	if (!range) return min_;
 	int num = rand() % range + min_;

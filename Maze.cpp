@@ -6,7 +6,8 @@ void Maze::init(int nRow_, int nCol_) {
 	nCol = nCol_;
 	cells.resize(nCells());
 
-	genRandom(MyRandomUtil::RandInt(nCells()/2));
+	//genRandom(MyRandomUtil::RandInt(nCells() / 2));
+	genRandom(MyRandomUtil::RandInt(0));
 
 }
 

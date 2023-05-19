@@ -1,18 +1,16 @@
 #pragma once
 #include "Util.h"
-#include "App.h"
+#include "Maze.h"
+
 
 class Astar
 {
 	using v2i = Vector2i;
 	using Dir = MyDirection;
 private:
-	std::vector<v2i> _neighbours;
-	Cell& cell(v2i pos_) {
-		Cell* p = maze().cellPtr(pos_);
-		assert(p);
-		return *p;
-	}
+	std::set<v2i> _neighbours;
+	
+	Cell& cell(v2i pos_);
 
 public:
 	v2i pos{ 0, 0 };
@@ -22,85 +20,33 @@ public:
 	std::set<v2i> frontiers;
 
 
-	void init(v2i src_, v2i dst_) {
-		pos = src_;
-		src = src_;
-		dst = dst_;
-		frontiers.insert(pos);
-	}
+	void init(v2i src_, v2i dst_);
 
-	v2i nextPosition() {
-		int i = 0;
-		v2i nextPos = *frontiers.begin();
-		int nextCost = totalCost(nextPos);
+	v2i nextPosition();
 
-		for (v2i f : frontiers) {
-			if (totalCost(f) < nextCost) {
-				nextPos = f;
-			}
-		}
-		return nextPos;
-	}
+	void update();
 
-	void update() {
-		if (frontiers.size() == 0 || pos == dst) {
-			onComplete();
-			return;
-		}
+	Maze& maze();
+	const Maze& maze() const;
 
-		//find out the cheapestFrontier
-		v2i nextPos = nextPosition();
-		
 
-		frontiers.erase(nextPos);
+	bool updateNeighbours(v2i& nextPos);
 
 
 
+	inline int estCostToDst(const v2i& pos_)		{ return (int)Distance2d::manhattan(pos_, dst); }
+	inline int costToNextPos(const v2i& nextPos_)	{ return (int)Distance2d::manhattan(pos, nextPos_) + currentCost(); }
+	inline int totalCost(const v2i& nextPos_)		{ return costToNextPos(nextPos_) + estCostToDst(nextPos_); }
+
+	inline int& visitCost(v2i pos_) { return cell(pos_).visitCost; }
+	inline int& currentCost()		{ return visitCost(pos); }
 
 
-	}
+	void onVisit(v2i pos_);
 
-	Maze& maze() { return App::Instance()->maze; }
-	const Maze& maze() const { return App::Instance()->maze; }
+	void updateVisitCost(v2i pos_);
 
-
-	bool neighbours() {
-		_neighbours.clear();
-
-		for (Dir d : MyDirectionUtil::entries) {
-			v2i dv = MyDirectionUtil::asVector2i(d);
-			Cell p = cell(dv);
-			if (p.isBlock()) continue;
-			_neighbours.emplace_back(dv);
-		}
-	}
-
-
-
-	inline int estCostToDst(const v2i& pos_) { return (int)Distance2d::manhattan(pos_, dst); }
-	inline int costToNextPos(const v2i& nextPos_) { return (int)Distance2d::manhattan(pos, nextPos_) + currentCost(); }
-	inline int totalCost(const v2i& nextPos_) { return costToNextPos(nextPos_) + estCostToDst(nextPos_); }
-
-	int& visitCost(v2i pos_) { return cell(pos_).visitCost; }
-	int& currentCost() { visitCost(pos); }
-
-
-
-
-	void updateVisitCost(v2i pos) {
-		Cell& c = cell(pos);
-		int newCost = costToNextPos(pos);
-		int oldCost = c.visitCost;
-
-
-		if (!c.isVisited() || newCost < oldCost) {
-			cell(pos).visitCost = newCost;
-		}
-	}
-
-	void onComplete() {
-		//makeBestPath()
-	}
+	void onComplete();
 	
 
 };
