@@ -34,7 +34,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	MyRegisterClass(hInstance);
 
 	App app;
-	std::srand((uint32_t)std::time(0));
+	//std::srand((uint32_t)std::time(0));
+	std::srand(19);
 	app.init();
 
 	// Perform application initialization:

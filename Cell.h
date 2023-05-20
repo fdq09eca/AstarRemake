@@ -22,6 +22,7 @@ public:
 	
 	void setType(Type t);
 	inline void setAsBlock()			{ setType(Type::Block); }
+	inline void setBlock(bool b)			{ b? setType(Type::Block) : setType(Type::Path); }
 	inline bool isVisited() const	{ return visitCost >= 0; };
 	inline bool isBlock()	const	{ return _type == Type::Block; };
 	

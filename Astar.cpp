@@ -13,6 +13,9 @@ void Astar::init(v2i src_, v2i dst_) {
 	pos = src_;
 	src = src_;
 	dst = dst_;
+
+	if (cell(dst).isBlock()) 
+		cell(dst).setBlock(false);
 	cell(pos).visitCost = 0;
 	history.emplace_back(pos);
 	//frontiers.insert(pos);
@@ -33,7 +36,7 @@ void Astar::update() {
 			continue;
 		};
 
-		if (MyVectorUtil::contains(history, dv)) {
+ 		if (MyVectorUtil::contains(history, dv)) {
 			continue;
 		}
 		
