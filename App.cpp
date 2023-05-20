@@ -42,7 +42,7 @@ void App::draw(HDC hdc_)  {
 
 	
 	maze.draw(backBuffer.dc());
-	
+	agent.draw(backBuffer.dc());
 	backBuffer.draw(hdc_);
 }
 

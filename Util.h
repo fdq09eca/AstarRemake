@@ -3,13 +3,13 @@
 #include <Windows.h>
 #include "windowsx.h"
 #include <string>
-#include <vector>
 #include <set>
 #include <map>
 #include <cassert>
 #include <cstdint>
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include <algorithm>
 
 // win32 
@@ -129,7 +129,7 @@ public:
 
 	Vector2d(double _x = 0, double _y = 0);
 	Vector2d(const Vector2d& v);
-	
+
 
 	~Vector2d() { x = 0; y = 0; }
 
@@ -145,7 +145,7 @@ public:
 
 
 	inline void operator=(const Vector2d& p) { *this = Vector2d(p); } //recursive here!!
-	
+
 	inline POINT asPOINT() const { return POINT{ (int)x, (int)y }; }
 	inline operator POINT () const { return asPOINT(); }
 
@@ -184,25 +184,25 @@ public:
 
 	inline POINT asPOINT() const { return POINT{ (int)x, (int)y }; }
 	inline operator POINT () const { return asPOINT(); }
-	
+
 	inline Vector2d asVector2d() const { return Vector2d{ (double)x, (double)y }; }
 	inline operator Vector2d() const { return asVector2d(); }
 
 	Vector2i(int x_ = 0, int y_ = 0) : x(x_), y(y_) {};
 	Vector2i(const POINT& p) : Vector2i(p.x, p.y) {};
-	
-	
-	
-	
+
+
+
+
 	inline bool operator!=(const Vector2i& v) const { return v.x != x || v.y != y; }
 	inline bool operator==(const Vector2i& v) const { return !operator!=(v); }
 
 	inline bool operator<(const Vector2i& v) const { return v.x < x && v.y < y; }
 	inline bool operator<=(const Vector2i& v) const { return !operator>(v); }
-	
+
 	inline bool operator>=(const Vector2i& v) const { return !operator<(v); }
 	inline bool operator>(const Vector2i& v) const { return v.x > x && v.y > y; }
-	
+
 
 	inline Vector2i operator+(const Vector2i& v) const { return Vector2i(x + v.x, y + v.y); }
 	inline Vector2i operator-(const Vector2i& v) const { return Vector2i(x - v.x, y - v.y); }
@@ -215,7 +215,7 @@ public:
 	inline Vector2i operator/(int v) const { return Vector2i(x / v, y / v); }
 
 
-	
+
 
 };
 
@@ -224,22 +224,41 @@ public:
 template<class T>
 inline void my_bzero(T& s) { memset(&s, 0, sizeof(s)); }
 
-template<class T>
-inline bool contains(const std::vector<T>& vec, T val) {
-	for (const auto& v : vec) {
-		if (v == val)
-			return true;
+
+struct MyVectorUtil {
+
+	template<class T>
+	static inline bool contains(const std::vector<T>& vec, const T& val) {
+		for (const auto& v : vec) {
+			if (v == val)
+				return true;
+		}
+		return false;
 	}
-	return false;
-}
+
+
+	template<class T>
+	static inline bool remove(std::vector<T>& vec, T& val) {
+		for (auto iter = vec.begin(); iter < vec.end(); iter++) {
+			if (*iter == val) {
+				vec.erase(iter);
+				return true;
+			}
+		
+		}
+		return false;
+	}
+
+
+};
 
 enum class MyDirection { N, E, S, W };
 
 struct MyDirectionUtil {
 	using MyDir = MyDirection;
 	using v2i = Vector2i;
-	
-	static constexpr MyDir	entries[4] { MyDir::N, MyDir::E, MyDir::S, MyDir::W };
+
+	static constexpr MyDir	entries[4]{ MyDir::N, MyDir::E, MyDir::S, MyDir::W };
 
 
 	MyDir opposite(MyDirection d) {
@@ -255,13 +274,13 @@ struct MyDirectionUtil {
 	}
 
 	static v2i asVector2i(MyDir d) {
-									// { MyDir::N  , MyDir::E , MyDir::S , MyDir::W	    };
-		static const v2i dirVectors[4] { v2i(0, -1), v2i(1, 0), v2i(0, 1), v2i(-1, 0)	};
+		// { MyDir::N  , MyDir::E , MyDir::S , MyDir::W	    };
+		static const v2i dirVectors[4]{ v2i(0, -1), v2i(1, 0), v2i(0, 1), v2i(-1, 0) };
 		return dirVectors[static_cast<int>(d)];
 	}
 
-	
-	
+
+
 };
 
 // Helpers

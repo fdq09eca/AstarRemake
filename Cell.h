@@ -10,9 +10,11 @@ class Cell
 private:
 	using Type = CellType;
 	Type _type = Type::Unknown;
+	
 public:
 	static const int size = 45;
 	int visitCost = -1; //
+	
 
 	Cell(){ reset(); }
 	~Cell() { }
@@ -28,6 +30,7 @@ public:
 
 	void drawAt(HDC hdc, POINT pos) const;
 	void drawAt(HDC hdc, POINT pos, COLORREF color_) const;
+	void drawAt(HDC hdc, POINT pos, COLORREF color_, int hCost) const;
 
 
 };

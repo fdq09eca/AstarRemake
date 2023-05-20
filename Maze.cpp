@@ -56,7 +56,7 @@ void Maze::genRandom(int nb) {
 		Cell* p = nullptr;
 		while (true) {
 			i = MyRandomUtil::RandInt(nRow * nCol - 1);
-			if (contains(vals, i)) { continue; };
+			if (MyVectorUtil::contains(vals, i)) { continue; };
 			break;
 		}
 		vals.emplace_back(i);
@@ -70,6 +70,8 @@ POINT Maze::cellPixelPos(int r, int c)  const {
 	pos.y = c * Cell::size + yOffset;
 	return pos;
 }
+
+POINT Maze::cellPixelPos(Vector2i v) const { return cellPixelPos(v.y, v.x); }
 
 void Maze::draw(HDC hdc) const {
 	for (int c = 0; c < nCol; c++) {

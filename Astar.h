@@ -17,22 +17,26 @@ public:
 	v2i src{ 0, 0 };
 	v2i dst{ 0, 0 };
 	std::vector<v2i> bestPath;
-	std::set<v2i> frontiers;
+	std::vector<v2i> frontiers;
+	std::vector<v2i> history;
 
 
 	void init(v2i src_, v2i dst_);
-
-	v2i nextPosition();
 
 	void update();
 
 	Maze& maze();
 	const Maze& maze() const;
 
+	v2i minCostFrontier();
 
-	bool updateNeighbours(v2i& nextPos);
-
-
+	void addHistory(v2i pos_) {
+		if (MyVectorUtil::contains(history, pos_)) {
+			assert(false);
+			return;
+		}
+		history.emplace_back(pos_);
+	}
 
 	inline int estCostToDst(const v2i& pos_)		{ return (int)Distance2d::manhattan(pos_, dst); }
 	inline int costToNextPos(const v2i& nextPos_)	{ return (int)Distance2d::manhattan(pos, nextPos_) + currentCost(); }
@@ -41,12 +45,11 @@ public:
 	inline int& visitCost(v2i pos_) { return cell(pos_).visitCost; }
 	inline int& currentCost()		{ return visitCost(pos); }
 
-
-	void onVisit(v2i pos_);
-
-	void updateVisitCost(v2i pos_);
+	bool updateVisitCost(v2i pos_);
 
 	void onComplete();
+
+	void draw(HDC hdc);
 	
 
 };

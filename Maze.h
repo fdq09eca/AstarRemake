@@ -38,6 +38,8 @@ public:
 
 	POINT cellPixelPos(int r, int c) const;
 
+	POINT cellPixelPos(Vector2i v) const;
+
 	std::vector<Cell*> unVisitedCells() {
 		std::vector<Cell*> vec;
 		for (auto& c : cells) { 
