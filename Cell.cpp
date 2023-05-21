@@ -59,7 +59,7 @@ void Cell::drawAt(HDC hdc, POINT pos, COLORREF color_, int hCost) const {
 		auto w_gCost = std::to_wstring(visitCost);
 		auto w_hCost = std::to_wstring(hCost);
 		auto w_fCost = std::to_wstring(visitCost + hCost);
-		MyWin32GuiUtil::TextOutAt(hdc, gCostPost, size/3, w_gCost.data(), MY_COLOR_RED);
+		MyWin32GuiUtil::TextOutAt(hdc, gCostPost, size/3, w_gCost.data(), MY_COLOR_BLUE);
 		MyWin32GuiUtil::TextOutAt(hdc, hCostPost, size/3, w_hCost.data(), MY_COLOR_BLUE);
 		MyWin32GuiUtil::TextOutAt(hdc, fCostPost, size/2, w_fCost.data(), MY_COLOR_BLACK);
 	}

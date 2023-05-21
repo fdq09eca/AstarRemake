@@ -16,11 +16,13 @@
 #define MY_COLOR_WHITE		RGB(255, 255, 255)
 #define MY_COLOR_RED		RGB(255, 0  , 0  )
 #define MY_COLOR_GREEN		RGB(0  , 255, 0  )
+#define MY_COLOR_DARKGREEN	RGB(3  , 75, 3  )
 #define MY_COLOR_SKYBLUE	RGB(136, 26 , 235)
 #define MY_COLOR_BLUE		RGB(0  , 0  , 255)
 #define MY_COLOR_BLACK		RGB(0  , 0  , 0  )
 #define MY_COLOR_GREY		RGB(128, 128, 128)
-#define MY_COLOR_YELLOW		RGB(255,234,0  )
+#define MY_COLOR_BROWN		RGB(124, 71 , 0  )
+#define MY_COLOR_YELLOW		RGB(255, 234, 0  )
 
 class NonCopyable {
 
