@@ -32,19 +32,8 @@ public:
 
 	v2i minCostFrontier();
 
-	void addHistory(v2i pos_) {
-		if (MyVectorUtil::contains(history, pos_)) {
-			assert(false);
-			return;
-		}
-		history.emplace_back(pos_);
-	}
-
 	inline int estCostToDst(const v2i& pos_)		{ return (int)Distance2d::manhattan(pos_, dst); }
 	inline int costToNextPos(const v2i& nextPos_)	{ return (int)Distance2d::manhattan(pos, nextPos_) + currentCost(); }
-	inline int travelCost(const v2i& nextPos_)		{ return costToNextPos(nextPos_) + estCostToDst(nextPos_); }
-	inline int fCost(const v2i& pos_)				{ return currentCost() + estCostToDst(pos_); }
-
 	inline int& visitCost(v2i pos_) { return cell(pos_).visitCost; }
 	inline int& currentCost()		{ return visitCost(pos); }
 

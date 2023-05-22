@@ -36,21 +36,18 @@ void Astar::update() {
 			continue;
 		};
 
-		if (MyVectorUtil::contains(history, dv)) { 
-			if (updateVisitCost(dv)) {
-				MyVectorUtil::remove(history, dv);
-				frontiers.emplace_back(dv);
-				continue; 
-			}
-		} 
-		else if (MyVectorUtil::contains(frontiers, dv)) {
-			//assert(frontiers.find(dv) == frontiers.end()); //should not exist in frontiers.
+		if (MyVectorUtil::contains(frontiers, dv)) {
 			updateVisitCost(dv);
-				//MyVectorUtil::remove(frontiers, dv);
-				//addHistory(dv);
 			continue;
-			//frontiers.emplace_back(dv);
 		}
+		
+		else if (cell(dv).isVisited()) { 
+			if (updateVisitCost(dv)) {
+				frontiers.emplace_back(dv);
+			}
+			continue; 
+		} 
+		
 		else {
 			updateVisitCost(dv);
 			frontiers.emplace_back(dv);
@@ -65,16 +62,8 @@ void Astar::update() {
 	}
 
 	v2i nextPos = minCostFrontier();
-	int tc = fCost(nextPos);
-	if (tc < 0) {
-		printf("tc: %d < 0", tc);
-	}
-
-	history.emplace_back(pos);
 	pos = nextPos;
 	MyVectorUtil::remove(frontiers, nextPos);
-	
-
 	return;
 }
 
@@ -150,7 +139,6 @@ void Astar::onComplete() {
 }
 
 void Astar::draw(HDC hdc) {
-	cell(pos).drawAt(hdc, maze().cellPixelPos(pos), MY_COLOR_RED, estCostToDst(pos));
 
 	for (const auto& f : frontiers) {
 		cell(f).drawAt(hdc, maze().cellPixelPos(f), MY_COLOR_YELLOW, estCostToDst(f));
@@ -165,5 +153,6 @@ void Astar::draw(HDC hdc) {
 	}
 
 	cell(dst).drawAt(hdc, maze().cellPixelPos(dst), MY_COLOR_GREEN);
+	cell(pos).drawAt(hdc, maze().cellPixelPos(pos), MY_COLOR_RED, estCostToDst(pos));
 
 }
