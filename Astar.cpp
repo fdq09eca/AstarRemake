@@ -111,22 +111,22 @@ void Astar::updatePath() {
 v2i Astar::minCostFrontier() {
 	assert(!frontiers.empty());
 	auto minIter = frontiers.begin();
-	int minCost = cell(*minIter).visitCost + estCostToDst(*minIter);
+	int minfCost = cell(*minIter).visitCost + estCostToDst(*minIter);
 	
 	for (auto iter = frontiers.begin() + 1; iter != frontiers.end(); iter++) {
-		auto minCost_i = cell(*iter).visitCost + estCostToDst(*iter);
-		printf("(%d, %d) minCost_i: %d\n", (*iter).x, (*iter).y, minCost_i);
+		auto minfCost_i = cell(*iter).visitCost + estCostToDst(*iter);
+		printf("(%d, %d) minCost_i: %d\n", (*iter).x, (*iter).y, minfCost_i);
 		
 		//printf("(%d, %d) hCost: %d\n", (*iter).x, (*iter).y, estCostToDst(*iter));
-		if (minCost_i < minCost) {
+		if (minfCost_i < minfCost) {
 			minIter = iter;
-			minCost = minCost_i;
+			minfCost = minfCost_i;
 		}
 
-		if (minCost_i == minCost) {
+		if (minfCost_i == minfCost) {
 			if (estCostToDst(*iter) < estCostToDst(*minIter)) {
 				minIter = iter;
-				minCost = minCost_i;
+				minfCost = minfCost_i;
 			}
 		}
 		
