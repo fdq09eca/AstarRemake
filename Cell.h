@@ -12,7 +12,7 @@ private:
 	Type _type = Type::Unknown;
 	
 public:
-	static const int size = 45;
+	static const int size = 32;
 	int visitCost = -1; //
 	
 

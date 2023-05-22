@@ -28,9 +28,9 @@ void Cell::drawAt(HDC hdc, POINT pos, COLORREF color_) const {
 
 	if (!isBlock()) {
 
-		auto gCostPost = Vector2i(pos) + 3;
-		auto hCostPost = Vector2i(pos) + 3;
-		auto fCostPost = Vector2i(pos) + size / 2;
+		auto gCostPost = Vec2i(pos) + 3;
+		auto hCostPost = Vec2i(pos) + 3;
+		auto fCostPost = Vec2i(pos) + size / 2;
 		hCostPost.x += size / 2 + 4;
 		gCostPost.x += 2;
 		fCostPost.x -= 8;
@@ -48,20 +48,26 @@ void Cell::drawAt(HDC hdc, POINT pos, COLORREF color_, int hCost) const {
 	
 	if (!isBlock()) {
 		
-		auto gCostPost = Vector2i(pos) + 3;
-		auto hCostPost = Vector2i(pos) + 3;
-		auto fCostPost = Vector2i(pos) + size/2;
+		auto gCostPost = Vec2i(pos) + 3;
+		auto hCostPost = Vec2i(pos) + 3;
+		auto fCostPost = Vec2i(pos) + size/2;
 		hCostPost.x += size/2 + 4;
 		gCostPost.x += 2;
 		fCostPost.x -= 8;
 		fCostPost.y -= 2;
 
-		auto w_gCost = std::to_wstring(visitCost);
-		auto w_hCost = std::to_wstring(hCost);
-		auto w_fCost = std::to_wstring(visitCost + hCost);
-		MyWin32GuiUtil::TextOutAt(hdc, gCostPost, size/3, w_gCost.data(), MY_COLOR_BLUE);
-		MyWin32GuiUtil::TextOutAt(hdc, hCostPost, size/3, w_hCost.data(), MY_COLOR_BLUE);
-		MyWin32GuiUtil::TextOutAt(hdc, fCostPost, size/2, w_fCost.data(), MY_COLOR_BLACK);
+		wchar_t w_gCost[256];
+		wsprintf(w_gCost, L"%d", visitCost);
+
+		wchar_t w_hCost[256];
+		wsprintf(w_hCost, L"%d", hCost);
+
+		wchar_t w_fCost[256];
+		wsprintf(w_fCost, L"%d", visitCost + hCost);
+
+		MyWin32GuiUtil::TextOutAt(hdc, gCostPost, size/3, w_gCost, MY_COLOR_BLUE);
+		MyWin32GuiUtil::TextOutAt(hdc, hCostPost, size/3, w_hCost, MY_COLOR_BLUE);
+		MyWin32GuiUtil::TextOutAt(hdc, fCostPost, size/2, w_fCost, MY_COLOR_BLACK);
 	}
 }
 

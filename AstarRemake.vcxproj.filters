@@ -42,6 +42,9 @@
     <ClInclude Include="Astar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="precompile_header.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -60,6 +63,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Astar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="precompile_header.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

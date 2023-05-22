@@ -35,7 +35,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	App app;
 	//std::srand((uint32_t)std::time(0));
-	std::srand(19);
 	app.init();
 
 	// Perform application initialization:
@@ -103,8 +102,17 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
 	hInst = hInstance; // Store instance handle in our global variable
 
-	HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+	HWND hWnd = CreateWindowW(
+					szWindowClass,
+					szTitle,
+					WS_OVERLAPPEDWINDOW,
+					0, 0, 
+					1600,
+					900,
+					nullptr,
+					nullptr,
+					hInstance,
+					nullptr);
 
 	if (!hWnd)
 	{
@@ -134,8 +142,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 	case WM_TIMER: {
-		// App::Instance()->update();
-		// InvalidateRect(hWnd, nullptr, false);
+		App::Instance()->update();
+		InvalidateRect(hWnd, nullptr, false);
 	} break;
 
 	case WM_CREATE: { } break;

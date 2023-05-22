@@ -10,17 +10,11 @@ public:
 	int yOffset = 0; 
 	int xOffset = 0;
 	
-	void init(int nRow_ = 10, int nCol_ = 10);
+	void init(int nCol_ = 10, int nRow_ = 10);
 
-	const Cell* cellPtr(int r, int c) const;
-
-	Cell* cellPtr(int r, int c);
-
-	Cell* cellPtr(Vector2i v);
-	
-	const Cell& cell(int r, int c) const;
-	
-	Cell& cell(POINT p) ;
+	Cell* cell(Vec2i v);
+		
+	Cell* cellFromScreenPoint(POINT p) ;
 
 	inline int width() const { return nCol * Cell::size; }
 	inline int height() const { return nRow * Cell::size; }
@@ -36,9 +30,7 @@ public:
 
 	void restart() { for (auto& c : cells) {  if (!c.isBlock())  c.reset(); } }
 
-	POINT cellPixelPos(int r, int c) const;
-
-	POINT cellPixelPos(Vector2i v) const;
+	POINT cellScreenPos(const Vec2i& v) const;
 
 	std::vector<Cell*> unVisitedCells() {
 		std::vector<Cell*> vec;
@@ -65,7 +57,7 @@ public:
 	}
 
 	
-	void draw(HDC hdc) const;
+	void draw(HDC hdc);
 
 	bool onMouseEvent(MouseEvent ev);
 	

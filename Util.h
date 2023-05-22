@@ -1,16 +1,6 @@
 #pragma once
-#include <stdio.h>
-#include <Windows.h>
-#include "windowsx.h"
-#include <string>
-#include <set>
-#include <map>
-#include <cassert>
-#include <cstdint>
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <algorithm>
+
+#include "precompile_header.h"
 
 // win32 
 #define MY_COLOR_WHITE		RGB(255, 255, 255)
@@ -35,44 +25,23 @@ public:
 	~NonCopyable() = default;
 };
 
+#define MY_ENUM_OP(E) \
+	constexpr E operator& (E x, E y)	{ return static_cast<E>(static_cast<int>(x) & static_cast<int>(y)); } \
+	constexpr E operator| (E x, E y)	{ return static_cast<E>(static_cast<int>(x) | static_cast<int>(y)); } \
+	constexpr E operator^ (E x, E y)	{ return static_cast<E>(static_cast<int>(x) ^ static_cast<int>(y)); } \
+	constexpr E operator~ (E x)			{ return static_cast<E>(~static_cast<int>(x)); } \
+	inline void operator&=(E& x, E y)	{ x = x & y; } \
+	inline void operator|=(E& x, E y)	{ x = x | y; } \
+	inline void operator^=(E& x, E y)	{ x = x ^ y; } \
+//--- MY_ENUM_OP ----
+
 enum class MouseButton {
-	NA = 0,
-	Left = 1 << 0,    // 1, 0001
-	Middle = 1 << 1,  // 2, 0010 
-	Right = 1 << 2,   // 4, 0100
+	NA		= 0,
+	Left	= 1 << 0,  // 1, 0001
+	Middle	= 1 << 1,  // 2, 0010
+	Right	= 1 << 2,  // 4, 0100
 };
-
-inline constexpr MouseButton operator& (MouseButton x, MouseButton y) {
-	return static_cast<MouseButton>(static_cast<int>(x) & static_cast<int>(y));
-}
-
-inline constexpr MouseButton operator| (MouseButton x, MouseButton y) {
-	return static_cast<MouseButton>(static_cast<int>(x) | static_cast<int>(y));
-}
-
-inline constexpr MouseButton operator^(MouseButton x, MouseButton y) {
-	return static_cast<MouseButton> (static_cast<int>(x) ^ static_cast<int>(y));
-}
-
-inline constexpr MouseButton operator~(MouseButton x) {
-	return static_cast<MouseButton>(~static_cast<int>(x));
-}
-
-inline MouseButton& operator&=(MouseButton& x, MouseButton y) {
-	x = x & y;
-	return x;
-}
-
-inline MouseButton& operator|=(MouseButton& x, MouseButton y) {
-	x = x | y;
-	return x;
-}
-
-inline MouseButton& operator^=(MouseButton& x, MouseButton y) {
-	x = x ^ y;
-	return x;
-}
-
+MY_ENUM_OP(MouseButton)
 
 enum class MouseEventType {
 	None = 0,
@@ -80,8 +49,6 @@ enum class MouseEventType {
 	Down,
 	Move,
 };
-
-
 
 class MouseEvent {
 public:
@@ -124,62 +91,62 @@ public:
 };
 
 
-class Vector2d {
+class Vec2d {
 
 public:
 	double x = 0;
 	double y = 0;
 
-	Vector2d(double _x = 0, double _y = 0);
-	Vector2d(const Vector2d& v);
+	Vec2d(double _x = 0, double _y = 0);
+	Vec2d(const Vec2d& v);
 
 
-	~Vector2d() { x = 0; y = 0; }
+	~Vec2d() { x = 0; y = 0; }
 
-	double distance(const Vector2d& p) const;
+	double distance(const Vec2d& p) const;
 
 	double length() const;
 
-	Vector2d unitVector() const;
+	Vec2d unitVector() const;
 
-	double dotProduct(const Vector2d& p) const;
+	double dotProduct(const Vec2d& p) const;
 
-	Vector2d project(const Vector2d& v) const;
+	Vec2d project(const Vec2d& v) const;
 
 
-	inline void operator=(const Vector2d& p) { *this = Vector2d(p); } //recursive here!!
+	inline void operator=(const Vec2d& p) { *this = Vec2d(p); } //recursive here!!
 
 	inline POINT asPOINT() const { return POINT{ (int)x, (int)y }; }
 	inline operator POINT () const { return asPOINT(); }
 
-	inline Vector2d operator+(const Vector2d& v) const { return Vector2d(x + v.x, y + v.y); }
-	inline Vector2d operator-(const Vector2d& v) const { return Vector2d(x - v.x, y - v.y); }
-	inline Vector2d operator*(const Vector2d& v) const { return Vector2d(x * v.x, y * v.y); }
-	inline Vector2d operator/(const Vector2d& v) const { return Vector2d(x / v.x, y / v.y); }
+	inline Vec2d operator+(const Vec2d& v) const { return Vec2d(x + v.x, y + v.y); }
+	inline Vec2d operator-(const Vec2d& v) const { return Vec2d(x - v.x, y - v.y); }
+	inline Vec2d operator*(const Vec2d& v) const { return Vec2d(x * v.x, y * v.y); }
+	inline Vec2d operator/(const Vec2d& v) const { return Vec2d(x / v.x, y / v.y); }
 
-	inline void operator+=(const Vector2d& v) { x += v.x; y += v.y; }
-	inline void operator-=(const Vector2d& v) { x -= v.x; y -= v.y; }
-	inline void operator*=(const Vector2d& v) { x *= v.x; y *= v.y; }
-	inline void operator/=(const Vector2d& v) { x /= v.x; y /= v.y; }
+	inline void operator+=(const Vec2d& v) { x += v.x; y += v.y; }
+	inline void operator-=(const Vec2d& v) { x -= v.x; y -= v.y; }
+	inline void operator*=(const Vec2d& v) { x *= v.x; y *= v.y; }
+	inline void operator/=(const Vec2d& v) { x /= v.x; y /= v.y; }
 
-	inline Vector2d operator*(int val) const { return Vector2d(x * val, y * val); }
-	inline Vector2d operator/(int val) const { return Vector2d(x / val, y / val); }
+	inline Vec2d operator*(int val) const { return Vec2d(x * val, y * val); }
+	inline Vec2d operator/(int val) const { return Vec2d(x / val, y / val); }
 
 	inline void operator*=(int val) { x *= val; y *= val; }
 	inline void operator/=(int val) { x /= val; y /= val; }
 
-	inline Vector2d operator*(float val) const { return Vector2d(x * val, y * val); }
-	inline Vector2d operator/(float val) const { return Vector2d(x / val, y / val); }
+	inline Vec2d operator*(float val) const { return Vec2d(x * val, y * val); }
+	inline Vec2d operator/(float val) const { return Vec2d(x / val, y / val); }
 
-	inline Vector2d operator*(double val) const { return Vector2d(x * val, y * val); }
-	inline Vector2d operator/(double val) const { return Vector2d(x / val, y / val); }
+	inline Vec2d operator*(double val) const { return Vec2d(x * val, y * val); }
+	inline Vec2d operator/(double val) const { return Vec2d(x / val, y / val); }
 
-	inline bool operator!=(const Vector2d& v) const { return v.x != x || v.y != y; }
-	inline bool operator==(const Vector2d& v) const { return !operator!=(v); }
+	inline bool operator!=(const Vec2d& v) const { return v.x != x || v.y != y; }
+	inline bool operator==(const Vec2d& v) const { return !operator!=(v); }
 };
 
 
-class Vector2i {
+class Vec2i {
 
 public:
 	int x = 0;
@@ -188,40 +155,39 @@ public:
 	inline POINT asPOINT() const { return POINT{ (int)x, (int)y }; }
 	inline operator POINT () const { return asPOINT(); }
 
-	inline Vector2d asVector2d() const { return Vector2d{ (double)x, (double)y }; }
-	inline operator Vector2d() const { return asVector2d(); }
+	inline Vec2d asVector2d() const { return Vec2d{ (double)x, (double)y }; }
+	inline operator Vec2d() const { return asVector2d(); }
 
-	Vector2i(int x_ = 0, int y_ = 0) : x(x_), y(y_) {};
-	Vector2i(const POINT& p) : Vector2i(p.x, p.y) {};
-
-
-
-
-	inline bool operator!=(const Vector2i& v) const { return v.x != x || v.y != y; }
-	inline bool operator==(const Vector2i& v) const { return !operator!=(v); }
-
-	inline bool operator<(const Vector2i& v) const { return v.x < x && v.y < y; }
-	inline bool operator<=(const Vector2i& v) const { return !operator>(v); }
-
-	inline bool operator>=(const Vector2i& v) const { return !operator<(v); }
-	inline bool operator>(const Vector2i& v) const { return v.x > x && v.y > y; }
-
-
-	inline Vector2i operator+(const Vector2i& v) const { return Vector2i(x + v.x, y + v.y); }
-	inline Vector2i operator-(const Vector2i& v) const { return Vector2i(x - v.x, y - v.y); }
-	inline Vector2i operator*(const Vector2i& v) const { return Vector2i(x * v.x, y * v.y); }
-	inline Vector2i operator/(const Vector2i& v) const { return Vector2i(x / v.x, y / v.y); }
-
-	inline Vector2i operator+(int v) const { return Vector2i(x + v, y + v); }
-	inline Vector2i operator-(int v) const { return Vector2i(x - v, y - v); }
-	inline Vector2i operator*(int v) const { return Vector2i(x * v, y * v); }
-	inline Vector2i operator/(int v) const { return Vector2i(x / v, y / v); }
+	Vec2i(int x_ = 0, int y_ = 0) : x(x_), y(y_) {};
+	Vec2i(const POINT& p) : Vec2i(p.x, p.y) {};
 
 
 
 
+	inline bool operator!=(const Vec2i& v) const { return v.x != x || v.y != y; }
+	inline bool operator==(const Vec2i& v) const { return !operator!=(v); }
+
+	inline bool operator<(const Vec2i& v) const { 
+		if (v.x < x) return true;
+		if (v.x > x) return false;
+
+		return v.y < y;
+	}
+
+	inline Vec2i operator+(const Vec2i& v) const { return Vec2i(x + v.x, y + v.y); }
+	inline Vec2i operator-(const Vec2i& v) const { return Vec2i(x - v.x, y - v.y); }
+	inline Vec2i operator*(const Vec2i& v) const { return Vec2i(x * v.x, y * v.y); }
+	inline Vec2i operator/(const Vec2i& v) const { return Vec2i(x / v.x, y / v.y); }
+
+	inline Vec2i operator+(int v) const { return Vec2i(x + v, y + v); }
+	inline Vec2i operator-(int v) const { return Vec2i(x - v, y - v); }
+	inline Vec2i operator*(int v) const { return Vec2i(x * v, y * v); }
+	inline Vec2i operator/(int v) const { return Vec2i(x / v, y / v); }
 };
 
+inline Vec2i abs(const Vec2i& v) {
+	return Vec2i(abs(v.x), abs(v.y));
+}
 
 
 template<class T>
@@ -241,11 +207,19 @@ struct MyVectorUtil {
 
 
 	template<class T>
-	static inline bool remove(std::vector<T>& vec, T& val) {
-		for (auto iter = vec.begin(); iter < vec.end(); iter++) {
-			if (*iter == val) {
-				vec.erase(iter);
+	static inline bool remove_unordered(std::vector<T>& vec, T& val) {
+		if (vec.size() == 1) {
+			if (vec[0] == val) {
+				vec.clear();
 				return true;
+			}
+		} else {
+			for (auto iter = vec.begin(); iter < vec.end(); iter++) {
+				if (*iter == val) {
+					*iter = vec.back();
+					vec.resize(vec.size() - 1);
+					return true;
+				}
 			}
 		}
 		return false;
@@ -254,16 +228,16 @@ struct MyVectorUtil {
 
 };
 
-enum class MyDirection { N, E, S, W };
+enum class MyDir { N, E, S, W };
 
-struct MyDirectionUtil {
-	using MyDir = MyDirection;
-	using v2i = Vector2i;
+struct MyDirUtil {
+	using MyDir = MyDir;
+	using v2i = Vec2i;
 
 	static constexpr MyDir	entries[4]{ MyDir::N, MyDir::E, MyDir::S, MyDir::W };
 
 
-	MyDir opposite(MyDirection d) {
+	MyDir opposite(MyDir d) {
 		switch (d)
 		{
 		case MyDir::N:	return MyDir::S;
@@ -280,9 +254,6 @@ struct MyDirectionUtil {
 		static const v2i dirVectors[4]{ v2i(0, -1), v2i(1, 0), v2i(0, 1), v2i(-1, 0) };
 		return dirVectors[static_cast<int>(d)];
 	}
-
-
-
 };
 
 // Helpers
@@ -293,11 +264,5 @@ struct MyRandomUtil {
 };
 
 struct MyWin32GuiUtil {
-	static void TextOutAt(HDC hdc, Vector2i pos, int fontSize, const wchar_t* text, COLORREF color = MY_COLOR_BLACK);
-};
-
-
-struct Distance2d {
-	using v2d = Vector2d;
-	static double manhattan(v2d src, v2d dst);
+	static void TextOutAt(HDC hdc, Vec2i pos, int fontSize, const wchar_t* text, COLORREF color = MY_COLOR_BLACK);
 };

@@ -1,5 +1,6 @@
 #include "App.h"
-#define APP_TIMER  512
+
+
 App* App::_instance = nullptr;
 
 void App::destroy()
@@ -8,12 +9,12 @@ void App::destroy()
 	DeleteObject(dashRedPen);
 	DeleteObject(solidBlackPen);
 	DeleteObject(solidRedBrush);
-	if (APP_TIMER) KillTimer(_hWnd, APP_TIMER);
+	KillTimer(_hWnd, timerId);
 }
 
 void App::initTimer(int fps) {
 	assert(_hWnd != NULL);
-	SetTimer(_hWnd, APP_TIMER, (int) (1000 / fps), (TIMERPROC) NULL);     
+	SetTimer(_hWnd, timerId, 0, (TIMERPROC) NULL);
 }
 
 void App::init() {
@@ -26,10 +27,11 @@ void App::init() {
 	solidRedPen = ::CreatePen(PS_SOLID, 5, RGB(255, 0, 0)); // red solid pen
 	solidRedBrush = ::CreateSolidBrush(RGB(255, 0, 0)); // red solid brush
 
-	maze.init(15, 15);
-	agent.init({ 5,  5}, { 10, 10 });
+	std::srand(36);
 
-
+	maze.init(45, 25);
+	maze.genRandom(400);
+	agent.init({ 5,  5}, { 40, 20 });
 }
 
 void App::setHwnd(HWND hWnd_) {

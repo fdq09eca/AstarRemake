@@ -1,12 +1,13 @@
 #pragma once
+
 #include "Maze.h"
 #include "Astar.h"
-
-
 
 class App : NonCopyable
 {
 private:
+	static const int timerId = 512;
+
 	static App* _instance;
 	HWND _hWnd = NULL;
 	BackBuffer backBuffer;

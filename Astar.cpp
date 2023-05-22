@@ -1,59 +1,56 @@
 #include "Astar.h"
 #include "App.h"
 
-using v2i = Vector2i;
+using v2i = Vec2i;
 
-Cell& Astar::cell(v2i pos_) {
-	Cell* p = maze().cellPtr(pos_);
-	assert(p);
-	return *p;
+Cell* Astar::cell(v2i pos_) {
+	return maze().cell(pos_);
 }
 
 void Astar::init(v2i src_, v2i dst_) {
-	pos = src_;
+	curPos = src_;
 	src = src_;
 	dst = dst_;
 
-	if (cell(dst).isBlock())
-		cell(dst).setBlock(false);
-	cell(pos).visitCost = 0;
-	history.emplace_back(pos);
-	//frontiers.insert(pos);
+	if (auto* dstCell = cell(dst)) {
+		dstCell->setBlock(false);
+	}
+
+	if (auto* srcCell = cell(src)) {
+		srcCell->visitCost = 0;
+	}
 }
 
 void Astar::update() {
-	if (pos == dst) {
+	if (curPos == dst) {
 		onComplete();
 		return;
 	}
 
-	//disvoer adjcent cell;
-	for (Dir d : MyDirectionUtil::entries) {
-		v2i dv = MyDirectionUtil::asVector2i(d);
-		dv = pos + dv;
-		Cell* p = maze().cellPtr(dv);
-		if (!p || p->isBlock()) {
+	//discover adjcent cell;
+	for (const Dir& d : MyDirUtil::entries) {
+		v2i dv = MyDirUtil::asVector2i(d);
+		auto nextPos = curPos + dv;
+		Cell* nextCell = cell(nextPos);
+		if (!nextCell || nextCell->isBlock()) {
 			continue;
 		};
 
-		if (MyVectorUtil::contains(frontiers, dv)) {
-			updateVisitCost(dv);
+		if (MyVectorUtil::contains(frontiers, nextPos)) {
+			updateVisitCost(nextPos);
 			continue;
 		}
 		
-		else if (cell(dv).isVisited()) { 
-			if (updateVisitCost(dv)) {
-				frontiers.emplace_back(dv);
+		if (nextCell->isVisited()) {
+			if (updateVisitCost(nextPos)) {
+				frontiers.emplace_back(nextPos);
 			}
-			continue; 
-		} 
-		
-		else {
-			updateVisitCost(dv);
-			frontiers.emplace_back(dv);
-			comeFrom[&cell(dv)] = &cell(pos);
+			continue;
 		}
-
+		
+		updateVisitCost(nextPos);
+		frontiers.emplace_back(nextPos);
+		comeFrom[nextCell] = cell(curPos);
 	}
 
 	if (frontiers.empty()) {
@@ -62,8 +59,8 @@ void Astar::update() {
 	}
 
 	v2i nextPos = minCostFrontier();
-	pos = nextPos;
-	MyVectorUtil::remove(frontiers, nextPos);
+	curPos = nextPos;
+	MyVectorUtil::remove_unordered(frontiers, nextPos);
 	return;
 }
 
@@ -71,43 +68,51 @@ Maze& Astar::maze() { return App::Instance()->maze; }
 
 const Maze& Astar::maze() const { return App::Instance()->maze; }
 
-
-
-
 void Astar::updatePath() {
 	bestPath.clear();
-	Cell* p = &cell(pos);
-	Cell* s = &cell(src);
+	Cell* p = cell(curPos);
+	Cell* s = cell(src);
 	while (p != s) {
 		bestPath.emplace_back(maze().cellCol(p), maze().cellRow(p));
-		p = comeFrom[p];
+
+		auto it = comeFrom.find(p);
+		if (it != comeFrom.end()) {
+			p = it->second;
+		} else {
+			assert(false);
+		}
 	}
 }
 
 v2i Astar::minCostFrontier() {
 	assert(!frontiers.empty());
 	auto minIter = frontiers.begin();
-	int minfCost = cell(*minIter).visitCost + estCostToDst(*minIter);
+
+	int visitCostScalar = 1;
+	int estCostScalar   = 2;
+
+	int minVisitCost = cell(*minIter)->visitCost * visitCostScalar;
+	int minEstCost   = estCostToDst(*minIter)    * estCostScalar;
 
 	for (auto iter = frontiers.begin() + 1; iter != frontiers.end(); iter++) {
-		auto minfCost_i = cell(*iter).visitCost + estCostToDst(*iter);
-		printf("(%d, %d) minCost_i: %d\n", (*iter).x, (*iter).y, minfCost_i);
+		int visitCost = cell(*iter)->visitCost * visitCostScalar;
+		int estCost   = estCostToDst(*iter)    * estCostScalar;
 
-		//printf("(%d, %d) hCost: %d\n", (*iter).x, (*iter).y, estCostToDst(*iter));
-		if (minfCost_i < minfCost) {
-			minIter = iter;
-			minfCost = minfCost_i;
+		if (visitCost + estCost > minVisitCost + minEstCost) {
+			continue;
 		}
 
-		if (minfCost_i == minfCost) {
-			if (estCostToDst(*iter) < estCostToDst(*minIter)) {
-				minIter = iter;
-				minfCost = minfCost_i;
+		if (visitCost + estCost == minVisitCost + minEstCost) {
+			if (estCost > minEstCost) {
+				continue;
 			}
 		}
 
+		minIter = iter;
+		minVisitCost = visitCost;
+		minEstCost   = estCost;
 	}
-	printf("===========\n");
+//	printf("===========\n");
 
 	v2i r = *minIter;
 	//printf("minCost: %d\n", fCost(r));
@@ -117,15 +122,26 @@ v2i Astar::minCostFrontier() {
 	//return r;
 }
 
+int Astar::visitCost(const v2i& pos_) {
 
-bool Astar::updateVisitCost(v2i pos_) {
-	Cell& c = cell(pos_);
-	int newCost = costToNextPos(pos_);
-	int oldCost = c.visitCost;
+	auto* c = cell(pos_);
+	if (!c) {
+		assert(false);
+		return INT_MAX;
+	}
+	return c->visitCost;
+}
+
+bool Astar::updateVisitCost(v2i nextPos) {
+	auto* cell = maze().cell(nextPos);
+	if (!cell) return false;
+
+	int newCost = costToNextPos(nextPos);
+	int oldCost = cell->visitCost;
 
 
-	if (!c.isVisited() || newCost < oldCost) {
-		c.visitCost = newCost;
+	if (!cell->isVisited() || newCost < oldCost) {
+		cell->visitCost = newCost;
 		return true;
 	}
 
@@ -141,18 +157,29 @@ void Astar::onComplete() {
 void Astar::draw(HDC hdc) {
 
 	for (const auto& f : frontiers) {
-		cell(f).drawAt(hdc, maze().cellPixelPos(f), MY_COLOR_YELLOW, estCostToDst(f));
+		drawCell(hdc, f, MY_COLOR_YELLOW, estCostToDst(f));
 	}
 
-	for (const auto& f : history) {
-		cell(f).drawAt(hdc, maze().cellPixelPos(f), MY_COLOR_GREY, estCostToDst(f));
-	}
+	//for (const auto& f : history) {
+	//	cell(f)->drawAt(hdc, maze().cellPixelPos(f), MY_COLOR_GREY, estCostToDst(f));
+	//}
 
 	for (const auto& f : bestPath) {
-		cell(f).drawAt(hdc, maze().cellPixelPos(f), MY_COLOR_GREEN, estCostToDst(f));
+		drawCell(hdc, f, MY_COLOR_GREEN, estCostToDst(f));
 	}
 
-	cell(dst).drawAt(hdc, maze().cellPixelPos(dst), MY_COLOR_GREEN);
-	cell(pos).drawAt(hdc, maze().cellPixelPos(pos), MY_COLOR_RED, estCostToDst(pos));
+	drawCell(hdc, dst, MY_COLOR_GREEN);
+	drawCell(hdc, curPos, MY_COLOR_RED, estCostToDst(curPos));
+}
 
+void Astar::drawCell(HDC hdc, const v2i& pos, COLORREF color_) {
+	if (auto* c = cell(pos)) {
+		c->drawAt(hdc, maze().cellScreenPos(pos), color_);
+	}
+}
+
+void Astar::drawCell(HDC hdc, const v2i& pos, COLORREF color_, int hCost) {
+	if (auto* c = cell(pos)) {
+		c->drawAt(hdc, maze().cellScreenPos(pos), color_, hCost);
+	}
 }
