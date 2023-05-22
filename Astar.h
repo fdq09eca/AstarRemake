@@ -8,7 +8,7 @@ class Astar
 	using v2i = Vector2i;
 	using Dir = MyDirection;
 private:
-	std::set<v2i> _neighbours;
+	
 	
 	Cell& cell(v2i pos_);
 

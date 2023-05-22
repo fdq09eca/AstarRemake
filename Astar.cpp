@@ -14,7 +14,7 @@ void Astar::init(v2i src_, v2i dst_) {
 	src = src_;
 	dst = dst_;
 
-	if (cell(dst).isBlock()) 
+	if (cell(dst).isBlock())
 		cell(dst).setBlock(false);
 	cell(pos).visitCost = 0;
 	history.emplace_back(pos);
@@ -36,20 +36,25 @@ void Astar::update() {
 			continue;
 		};
 
- 		if (MyVectorUtil::contains(history, dv)) { continue; }
-		
-		if (MyVectorUtil::contains(frontiers, dv)) {
-			//assert(frontiers.find(dv) == frontiers.end()); //should not exist in frontiers.
-			if (!updateVisitCost(dv)) {
-				MyVectorUtil::remove(frontiers, dv);
-				addHistory(dv);
-				continue;
+		if (MyVectorUtil::contains(history, dv)) { 
+			if (updateVisitCost(dv)) {
+				MyVectorUtil::remove(history, dv);
+				frontiers.emplace_back(dv);
+				continue; 
 			}
+		} 
+		else if (MyVectorUtil::contains(frontiers, dv)) {
+			//assert(frontiers.find(dv) == frontiers.end()); //should not exist in frontiers.
+			updateVisitCost(dv);
+				//MyVectorUtil::remove(frontiers, dv);
+				//addHistory(dv);
+			continue;
 			//frontiers.emplace_back(dv);
 		}
 		else {
 			updateVisitCost(dv);
 			frontiers.emplace_back(dv);
+			comeFrom[&cell(dv)] = &cell(pos);
 		}
 
 	}
@@ -64,27 +69,12 @@ void Astar::update() {
 	if (tc < 0) {
 		printf("tc: %d < 0", tc);
 	}
-	if (comeFrom.find(&cell(nextPos)) == comeFrom.end()) {
-		comeFrom[&cell(nextPos)] = &cell(pos);
-	}
-	else {
-		auto p = comeFrom[&cell(nextPos)];
-		auto pv = v2i(maze().cellCol(p), maze().cellRow(p));
-		auto old_cost = fCost(pv) + estCostToDst(pv);
-		auto new_cost = fCost(pos) + estCostToDst(pos);
-		if (new_cost < old_cost) {
-			comeFrom[&cell(nextPos)] = &cell(pos);
-		}
 
-
-	}
-
-	
 	history.emplace_back(pos);
 	pos = nextPos;
 	MyVectorUtil::remove(frontiers, nextPos);
-	//updatePath();
 	
+
 	return;
 }
 
@@ -96,27 +86,24 @@ const Maze& Astar::maze() const { return App::Instance()->maze; }
 
 
 void Astar::updatePath() {
-	Cell* p = &cell(dst);
+	bestPath.clear();
+	Cell* p = &cell(pos);
 	Cell* s = &cell(src);
-
-
 	while (p != s) {
-
 		bestPath.emplace_back(maze().cellCol(p), maze().cellRow(p));
 		p = comeFrom[p];
 	}
-
 }
 
 v2i Astar::minCostFrontier() {
 	assert(!frontiers.empty());
 	auto minIter = frontiers.begin();
 	int minfCost = cell(*minIter).visitCost + estCostToDst(*minIter);
-	
+
 	for (auto iter = frontiers.begin() + 1; iter != frontiers.end(); iter++) {
 		auto minfCost_i = cell(*iter).visitCost + estCostToDst(*iter);
 		printf("(%d, %d) minCost_i: %d\n", (*iter).x, (*iter).y, minfCost_i);
-		
+
 		//printf("(%d, %d) hCost: %d\n", (*iter).x, (*iter).y, estCostToDst(*iter));
 		if (minfCost_i < minfCost) {
 			minIter = iter;
@@ -129,10 +116,10 @@ v2i Astar::minCostFrontier() {
 				minfCost = minfCost_i;
 			}
 		}
-		
+
 	}
-		printf("===========\n");
-	
+	printf("===========\n");
+
 	v2i r = *minIter;
 	//printf("minCost: %d\n", fCost(r));
 	return r;
@@ -178,5 +165,5 @@ void Astar::draw(HDC hdc) {
 	}
 
 	cell(dst).drawAt(hdc, maze().cellPixelPos(dst), MY_COLOR_GREEN);
-	
+
 }
