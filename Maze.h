@@ -20,7 +20,7 @@ public:
 	
 	const Cell& cell(int r, int c) const;
 	
-	const Cell& cell(POINT p) const;
+	Cell& cell(POINT p) ;
 
 	inline int width() const { return nCol * Cell::size; }
 	inline int height() const { return nRow * Cell::size; }
@@ -67,6 +67,9 @@ public:
 	
 	void draw(HDC hdc) const;
 
+	bool onMouseEvent(MouseEvent ev);
+	
+	
 	
 };
 

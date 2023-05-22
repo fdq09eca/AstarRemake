@@ -49,7 +49,7 @@ void App::draw(HDC hdc_)  {
 
 void App::onMouseEvent(const MouseEvent& ev) {
 
-	
+	maze.onMouseEvent(ev);
 
 }
 

@@ -31,20 +31,16 @@ Cell* Maze::cellPtr(Vector2i v) {
 
 
 
-
-
-
-
 const Cell& Maze::cell(int r, int c) const {
 	auto p = cellPtr(r, c);
 	assert(p);
 	return *p;
 }
 
-const Cell& Maze::cell(POINT p) const {
-	int r = p.y / Cell::size;
-	int c = p.x / Cell::size;
-	return cell(r, c);
+Cell& Maze::cell(POINT p) {
+	int r = p.x / Cell::size;
+	int c = p.y / Cell::size;
+	return *cellPtr(r, c);
 }
 
 void Maze::genRandom(int nb) {
@@ -83,3 +79,23 @@ void Maze::draw(HDC hdc) const {
 		}
 	}
 }
+
+bool Maze::onMouseEvent(MouseEvent ev) {
+
+	if (ev.isLButton()) {
+		if (ev.isUp()) {
+			Cell& c = cell(ev.pos);
+
+			if (c.isBlock()) {
+				c.setBlock(false);
+				return true;
+			}
+			else {
+				c.setBlock(true);
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
