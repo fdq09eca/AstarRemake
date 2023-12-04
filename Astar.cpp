@@ -31,6 +31,7 @@ void Astar::update() {
 	for (const Dir& d : MyDirUtil::entries) {
 		v2i dv = MyDirUtil::asVector2i(d);
 		auto nextPos = curPos + dv;
+		
 		Cell* nextCell = cell(nextPos);
 		if (!nextCell || nextCell->isBlock()) {
 			continue;
